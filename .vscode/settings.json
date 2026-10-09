@@ -1,0 +1,25 @@
+{
+  // Use the Prettier pinned in devDependencies, not the extension's bundled copy,
+  // so the editor and `npm run format` always produce identical output.
+  "prettier.prettierPath": "./node_modules/prettier",
+
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[css]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[html]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+
+  "eslint.useFlatConfig": true,
+  "files.insertFinalNewline": true,
+  "files.trimTrailingWhitespace": true
+}
