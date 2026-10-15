@@ -21,6 +21,13 @@ class GameController {
     this.#players = [new Player(type1), new Player(type2)];
   }
 
+  allShipsPlaced() {
+    return (
+      this.#remainingShips[0].length === 0 &&
+      this.#remainingShips[1].length === 0
+    );
+  }
+
   remainingShips(playerIndex = 0) {
     this.#checkIndex(playerIndex);
     return [...this.#remainingShips[playerIndex]];

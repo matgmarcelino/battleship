@@ -1,32 +1,35 @@
 {
-  "name": "template",
+  "name": "battleship",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Browser Battleship game against a computer opponent",
+  "main": "src/js/index.js",
   "scripts": {
     "start": "webpack serve --open --config webpack.dev.js",
     "build": "webpack --config webpack.prod.js",
-    "deploy": "git subtree push --prefix dist origin gh-pages",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "test": "node --experimental-vm-modules node_modules/.bin/jest"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/matgmarcelino/template.git"
+    "url": "git+https://github.com/matgmarcelino/battleship.git"
   },
   "keywords": [],
-  "author": "",
+  "author": "Matheus Marcelino",
   "license": "ISC",
   "type": "module",
   "bugs": {
-    "url": "https://github.com/template/"
+    "url": "https://github.com/matgmarcelino/battleship/issues"
   },
-  "homepage": "https://github.com/matgmarcelino/template#readme",
+  "homepage": "https://github.com/matgmarcelino/battleship#readme",
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "css-loader": "^7.1.4",
     "eslint": "^10.8.0",
+    "eslint-config-prettier": "^10.1.8",
+    "gh-pages": "^6.3.0",
     "globals": "^17.9.0",
     "html-webpack-plugin": "^5.6.7",
     "jest": "^30.4.2",

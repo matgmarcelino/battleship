@@ -25,9 +25,27 @@ export default defineConfig([
     },
   },
 
-  // Webpack configs and anything else at the root
+  // Jest tests
   {
-    files: ["*.js", "*.cjs"],
+    files: ["src/**/*.test.js"],
+    languageOptions: {
+      globals: globals.jest,
+    },
+  },
+
+  // Webpack configs and anything else at the root ("type": "module")
+  {
+    files: ["*.js", "*.mjs"],
+    plugins: { js },
+    extends: ["js/recommended"],
+    languageOptions: {
+      ecmaVersion: "latest",
+      sourceType: "module",
+      globals: globals.node,
+    },
+  },
+  {
+    files: ["*.cjs"],
     plugins: { js },
     extends: ["js/recommended"],
     languageOptions: {
@@ -36,4 +54,7 @@ export default defineConfig([
       globals: globals.node,
     },
   },
+
+  // Turn off rules that conflict with Prettier; keep last
+  prettier,
 ]);

@@ -52,7 +52,8 @@ class Gameboard {
 
   #inAttacks([row, col]) {
     return this.#attacks.some(
-      (attack) => attack.coordinates[0] === row && attack.coordinates[1] === col,
+      (attack) =>
+        attack.coordinates[0] === row && attack.coordinates[1] === col,
     );
   }
 

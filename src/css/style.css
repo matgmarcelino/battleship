@@ -515,6 +515,8 @@
   .game-over {
     --result: var(--accent);
     width: min(440px, calc(100% - 32px));
+    /* reset.css zeroes all margins; modal dialogs center via margin: auto */
+    margin: auto;
     padding: 40px 36px;
     border-radius: 16px;
     border: 2px solid var(--result);

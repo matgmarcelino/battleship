@@ -1,6 +1,12 @@
 import { FLEET } from "../logic/GameController.js";
 
-export function createBoard(board, wrapper) {
+export function createBoard(
+  board,
+  wrapper,
+  { interactive = false, disabled = false } = {},
+) {
+  wrapper.replaceChildren();
+
   for (let i = 0; i < 100; i++) {
     const row = Math.floor(i / 10);
     const col = i % 10;
@@ -8,15 +14,50 @@ export function createBoard(board, wrapper) {
     const cellStatus = board[row][col];
     if (!cellStatus) return false;
 
-    const cellDiv = document.createElement("div");
-    cellDiv.classList.add("cell", cellStatus);
-    cellDiv.dataset.row = row;
-    cellDiv.dataset.col = col;
+    const cell = document.createElement(interactive ? "button" : "div");
+    cell.classList.add("cell", cellStatus);
+    cell.dataset.row = row;
+    cell.dataset.col = col;
 
-    wrapper.append(cellDiv);
+    if (interactive) {
+      cell.type = "button";
+      cell.setAttribute("aria-label", `${coordName(row, col)}, ${cellStatus}`);
+      // Only empty cells get disabled so hit/miss cells keep their colors
+      if (disabled && cellStatus === "empty") cell.disabled = true;
+    }
+
+    wrapper.append(cell);
   }
 
   return true;
+}
+
+export function coordName(row, col) {
+  return `${String.fromCharCode(65 + row)}${col + 1}`;
+}
+
+export function coordSpan(row, col) {
+  const span = document.createElement("span");
+  span.classList.add("coord");
+  span.textContent = coordName(row, col);
+  return span;
+}
+
+export function showPreview(wrapper, cells, valid) {
+  clearPreview(wrapper);
+
+  cells.forEach(([row, col]) => {
+    const cell = wrapper.querySelector(
+      `.cell[data-row="${row}"][data-col="${col}"]`,
+    );
+    if (cell) cell.classList.add(valid ? "preview" : "preview-invalid");
+  });
+}
+
+export function clearPreview(wrapper) {
+  wrapper
+    .querySelectorAll(".preview, .preview-invalid")
+    .forEach((cell) => cell.classList.remove("preview", "preview-invalid"));
 }
 
 export function createFleetList(remaining, wrapper) {
@@ -55,4 +96,3 @@ function findPlaced(remaining) {
     return { ...ship, status };
   });
 }
-
