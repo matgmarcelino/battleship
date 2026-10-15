@@ -1,19 +1,27 @@
 import Player from "./Player.js";
 
-const FLEET = [5, 4, 3, 3, 2];
+export const FLEET = [
+  { name: "Carrier", length: 5 },
+  { name: "Battleship", length: 4 },
+  { name: "Cruiser", length: 3 },
+  { name: "Submarine", length: 3 },
+  { name: "Destroyer", length: 2 },
+];
+
+const FLEET_LENGTHS = FLEET.map((ship) => ship.length);
 
 class GameController {
   #players;
   #phase = "setup";
   #currentPlayer = 0;
   #winner = null;
-  #remainingShips = [[...FLEET], [...FLEET]];
+  #remainingShips = [[...FLEET_LENGTHS], [...FLEET_LENGTHS]];
 
   constructor(type1, type2) {
     this.#players = [new Player(type1), new Player(type2)];
   }
 
-  remainingShips(playerIndex) {
+  remainingShips(playerIndex = 0) {
     this.#checkIndex(playerIndex);
     return [...this.#remainingShips[playerIndex]];
   }

@@ -1,17 +1,622 @@
 @import "./reset.css";
 
-:root {
-  font-family:
-    system-ui,
-    -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    Roboto,
-    Oxygen,
-    Ubuntu,
-    Cantarell,
-    "Open Sans",
-    "Helvetica Neue",
-    sans-serif;
-  font-size: 16px;
-}
+/* ==========================================================================
+   Tokens
+   ========================================================================== */
+
+   :root {
+    /* Surfaces */
+    --bg: #0b1620;
+    --surface: #12212e;
+    --surface-2: #1a2d3d;
+    --border: #2a4256;
+
+    /* Text */
+    --text: #e6eef3;
+    --text-muted: #8da3b4;
+
+    /* Board cells */
+    --water: #16293a;
+    --water-hover: #1f3a50;
+    --ship: #7d8e9c;
+    --hit: #f2784b;
+    --hit-ink: #3a1408;
+    --miss: #a9c7dd;
+    --preview: rgb(63 193 201 / 0.35);
+
+    /* Accent */
+    --accent: #3fc1c9;
+    --accent-hover: #6fd4da;
+    --accent-ink: #06282b;
+
+    /* Type */
+    --font-display: "Chakra Petch", sans-serif;
+    --font-body: "IBM Plex Sans", system-ui, sans-serif;
+    --font-mono: "IBM Plex Mono", monospace;
+
+    --text-xs: 0.75rem;
+    --text-sm: 0.8125rem;
+    --text-base: 0.9375rem;
+    --text-md: 1rem;
+    --text-lg: 1.25rem;
+    --text-xl: 1.75rem;
+    --text-2xl: 2.75rem;
+
+    --tracking-wide: 0.06em;
+    --tracking-wider: 0.12em;
+
+    /* Board sizing */
+    --cell: 36px;
+    --gap: 3px;
+    --label: 24px;
+
+    /* Shape */
+    --radius-cell: 4px;
+    --radius-btn: 8px;
+    --radius-panel: 14px;
+  }
+
+  /* ==========================================================================
+     Base
+     ========================================================================== */
+
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: var(--text-base);
+    line-height: 1.5;
+  }
+
+  h1,
+  h2,
+  p {
+    margin: 0;
+  }
+
+  button {
+    font: inherit;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  /* ==========================================================================
+     Layout
+     ========================================================================== */
+
+  .app {
+    max-width: 1040px;
+    margin: 0 auto;
+    padding: 32px 16px 48px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .layout {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 32px;
+  }
+
+  /* ==========================================================================
+     Header
+     ========================================================================== */
+
+  .app-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .brand-icon {
+    width: 32px;
+    height: 32px;
+    color: var(--accent);
+  }
+
+  .brand-title {
+    font-family: var(--font-display);
+    font-size: var(--text-xl);
+    font-weight: 700;
+    letter-spacing: var(--tracking-wider);
+    text-transform: uppercase;
+  }
+
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .turn-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    border-radius: 999px;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--text-muted);
+  }
+
+  .turn-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--text-muted);
+  }
+
+  /* ==========================================================================
+     Status bar
+     ========================================================================== */
+
+  .status {
+    padding: 14px 18px;
+    border-radius: 10px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    font-size: var(--text-md);
+  }
+
+  /* Wrap coordinates in messages with <span class="coord">E1</span> */
+  .status .coord {
+    font-family: var(--font-mono);
+    color: var(--miss);
+  }
+
+  /* ==========================================================================
+     Buttons
+     ========================================================================== */
+
+  .btn {
+    min-height: 44px;
+    padding: 0 18px;
+    border-radius: var(--radius-btn);
+    border: 1px solid var(--border);
+    background: var(--surface-2);
+    color: var(--text);
+    font-size: var(--text-base);
+    font-weight: 500;
+    cursor: pointer;
+  }
+
+  .btn:hover {
+    border-color: var(--text-muted);
+  }
+
+  .btn-ghost {
+    background: transparent;
+  }
+
+  .btn-primary {
+    min-height: 48px;
+    border: 0;
+    background: var(--accent);
+    color: var(--accent-ink);
+    font-family: var(--font-display);
+    font-weight: 700;
+    letter-spacing: var(--tracking-wider);
+    text-transform: uppercase;
+  }
+
+  .btn-primary:hover {
+    background: var(--accent-hover);
+  }
+
+  .btn:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+
+  /* ==========================================================================
+     Panels
+     ========================================================================== */
+
+  .panel {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 24px;
+    border-radius: var(--radius-panel);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    max-width: 100%;
+    overflow-x: auto;
+  }
+
+  .panel-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 4px 12px;
+  }
+
+  .panel-title {
+    font-family: var(--font-display);
+    font-size: var(--text-lg);
+    font-weight: 600;
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+  }
+
+  .panel-subtitle,
+  .hint {
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+  }
+
+  /* ==========================================================================
+     Board
+     ========================================================================== */
+
+  .board-frame {
+    display: grid;
+    grid-template-columns: var(--label) auto;
+    grid-template-rows: var(--label) auto;
+    gap: var(--gap);
+  }
+
+  .col-labels,
+  .row-labels {
+    display: grid;
+    gap: var(--gap);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    font-weight: 500;
+    color: var(--text-muted);
+  }
+
+  .col-labels {
+    grid-column: 2;
+    grid-row: 1;
+    grid-template-columns: repeat(10, var(--cell));
+  }
+
+  .row-labels {
+    grid-column: 1;
+    grid-row: 2;
+    grid-template-rows: repeat(10, var(--cell));
+  }
+
+  .col-labels span,
+  .row-labels span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .board {
+    grid-column: 2;
+    grid-row: 2;
+    display: grid;
+    grid-template-columns: repeat(10, var(--cell));
+    grid-template-rows: repeat(10, var(--cell));
+    gap: var(--gap);
+  }
+
+  /* ==========================================================================
+     Cells: class names match getBoard() values
+     ========================================================================== */
+
+  .cell {
+    position: relative;
+    display: block;
+    width: var(--cell);
+    height: var(--cell);
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: var(--radius-cell);
+    background: var(--water);
+  }
+
+  .cell.ship {
+    background: var(--ship);
+  }
+
+  .cell.hit {
+    background: var(--hit);
+  }
+
+  .cell.hit::before,
+  .cell.hit::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 50%;
+    height: 3px;
+    border-radius: 2px;
+    background: var(--hit-ink);
+  }
+
+  .cell.hit::before {
+    transform: translate(-50%, -50%) rotate(45deg);
+  }
+
+  .cell.hit::after {
+    transform: translate(-50%, -50%) rotate(-45deg);
+  }
+
+  .cell.miss::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 22%;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: var(--miss);
+    transform: translate(-50%, -50%);
+  }
+
+  /* Setup only: added by domController while hovering */
+  .cell.preview {
+    background: var(--preview);
+    box-shadow: inset 0 0 0 2px var(--accent);
+  }
+
+  .cell.preview-invalid {
+    background: rgb(242 120 75 / 0.3);
+    box-shadow: inset 0 0 0 2px var(--hit);
+  }
+
+  /* Clickable cells (enemy board, and your board during setup) */
+  button.cell {
+    cursor: pointer;
+  }
+
+  button.cell.empty:hover {
+    background: var(--water-hover);
+    box-shadow: inset 0 0 0 2px var(--accent);
+  }
+
+  #enemy-board button.cell.empty {
+    cursor: crosshair;
+  }
+
+  button.cell.hit,
+  button.cell.miss,
+  button.cell:disabled {
+    cursor: not-allowed;
+  }
+
+  button.cell:disabled:hover {
+    background: var(--water);
+    box-shadow: none;
+  }
+
+  /* ==========================================================================
+     Setup panel
+     ========================================================================== */
+
+  .setup-panel {
+    flex: 1 1 300px;
+    max-width: 380px;
+    gap: 20px;
+  }
+
+  .fleet-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  /* Suggested markup for each item:
+     <li class="fleet-item [current|placed]">
+       <span class="fleet-name">Cruiser</span>
+       <span class="fleet-pips"><span class="pip"></span>...</span>
+     </li> */
+  .fleet-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 14px;
+    border-radius: var(--radius-btn);
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+  }
+
+  .fleet-item.current {
+    border-color: var(--accent);
+  }
+
+  .fleet-item.placed {
+    opacity: 0.55;
+  }
+
+  .fleet-name {
+    font-weight: 600;
+  }
+
+  .fleet-pips {
+    display: flex;
+    gap: 3px;
+  }
+
+  .pip {
+    width: 14px;
+    height: 14px;
+    border-radius: 3px;
+    background: var(--ship);
+  }
+
+  .setup-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .setup-buttons .btn {
+    flex: 1 1 120px;
+  }
+
+  /* ==========================================================================
+     Legend
+     ========================================================================== */
+
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 24px;
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+  }
+
+  .legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .legend-swatch {
+    --cell: 18px;
+  }
+
+  .legend-swatch.hit::before,
+  .legend-swatch.hit::after {
+    height: 2px;
+  }
+
+  /* ==========================================================================
+     Game over dialog
+     ========================================================================== */
+
+  .game-over {
+    --result: var(--accent);
+    width: min(440px, calc(100% - 32px));
+    padding: 40px 36px;
+    border-radius: 16px;
+    border: 2px solid var(--result);
+    background: var(--surface);
+    color: var(--text);
+    text-align: center;
+  }
+
+  .game-over[open] {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .game-over::backdrop {
+    background: rgb(5 11 16 / 0.82);
+  }
+
+  /* Add class "lose" to the dialog when the computer wins */
+  .game-over.lose {
+    --result: var(--hit);
+  }
+
+  .game-over-icon {
+    width: 56px;
+    height: 56px;
+    color: var(--result);
+  }
+
+  .game-over-title {
+    font-family: var(--font-display);
+    font-size: var(--text-2xl);
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--result);
+  }
+
+  .game-over-message {
+    font-size: var(--text-md);
+    color: var(--text-muted);
+  }
+
+  .game-over .btn-primary {
+    margin-top: 8px;
+    padding: 0 32px;
+  }
+
+  /* ==========================================================================
+     Phase and turn states (set on <body> by domController)
+     ========================================================================== */
+
+  /* Setup: your board + setup panel, no enemy board or legend */
+  body[data-phase="setup"] .enemy-panel,
+  body[data-phase="setup"] .legend {
+    display: none;
+  }
+
+  /* Playing and over: hide the setup panel */
+  body:not([data-phase="setup"]) .setup-panel {
+    display: none;
+  }
+
+  /* Your turn: enemy panel lights up */
+  body[data-phase="playing"][data-turn="player"] .enemy-panel {
+    border: 2px solid var(--accent);
+  }
+
+  body[data-phase="playing"][data-turn="player"] .enemy-panel .panel-title {
+    color: var(--accent);
+  }
+
+  body[data-phase="playing"][data-turn="player"] .turn-pill {
+    border-color: var(--accent);
+    color: var(--text);
+  }
+
+  body[data-phase="playing"][data-turn="player"] .turn-dot {
+    background: var(--accent);
+  }
+
+  /* Computer's turn: dim the enemy board */
+  body[data-phase="playing"][data-turn="computer"] .enemy-panel .board {
+    opacity: 0.6;
+  }
+
+  body[data-phase="playing"][data-turn="computer"] .turn-dot {
+    background: var(--hit);
+  }
+
+  /* ==========================================================================
+     Small screens
+     ========================================================================== */
+
+  @media (max-width: 480px) {
+    :root {
+      --cell: 28px;
+      --label: 18px;
+    }
+
+    .panel {
+      padding: 16px;
+    }
+  }
